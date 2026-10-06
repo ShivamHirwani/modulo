@@ -78,8 +78,8 @@ function mock(m,p,b){let r;const K=`${m} ${p.replace(/[0-9a-z]+$/,x=>/^id\d+$/.t
 async function api(m,p,b){let s,j;if(API){let r;try{r=await fetch(API+p,{method:m,headers:{"content-type":"application/json",...(token?{authorization:"Bearer "+token}:{})},body:b?JSON.stringify(b):undefined})}catch{throw new Error("Cannot reach the server. It may be waking up (wait a minute, then retry), or CORS_ORIGINS must include "+location.origin)}s=r.status;j=await r.json().catch(()=>({}))}else{const r=mock(m,p,b);s=r.status;j=JSON.parse(JSON.stringify(r.body))}
  if(s==401&&token&&!p.startsWith("/auth/")){save(null);landing();throw new Error("Session expired. Please log in again.")}
  if(p=="/auth/signup"&&s==409)throw new Error("That email already has an account. Use Log in.");if(p=="/auth/login"&&s==401)throw new Error("Wrong email or password.");if(s==429)throw new Error("Too many attempts. Wait a minute and try again.");
- if(s>=400)throw new Error(j.message||j.error||"error "+s);return j}
-const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),3000)},T=(f)=>async(...a)=>{try{await f(...a)}catch(e){toast(e.message)}};
+ if(s>=400)throw new Error(Array.isArray(j.issues)&&j.issues.length?"Check your input: "+j.issues.map(i=>(i.path?i.path+" - ":"")+i.message).join("; "):(j.message||j.error||"error "+s));return j}
+const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),6000)},T=(f)=>async(...a)=>{try{await f(...a)}catch(e){toast(e.message)}};
 $("#ban").textContent=API?"Connecting to server… (a free server can take up to a minute to wake)":"Demo mode: runs in your browser with the same rules as the real server. Data is not saved.";
 if(API)fetch(API+"/healthz",{signal:AbortSignal.timeout(90000)}).then(r=>{if(!r.ok)throw 0;$("#ban").textContent="Server ready"}).catch(()=>{$("#ban").textContent="Cannot reach "+API+". Waking up? Reload in a minute. Else check the API URL and that CORS_ORIGINS on Render is exactly "+location.origin})
 /* ---- landing ---- */
