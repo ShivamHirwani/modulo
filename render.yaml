@@ -1,0 +1,19 @@
+# Render Blueprint: New + > Blueprint > pick this repo. Secrets (sync:false) are asked for in the dashboard.
+services:
+  - type: web
+    name: modulo-api
+    runtime: node
+    region: singapore          # closest to India among Render regions (verify current list)
+    plan: free                 # sleeps after 15 min idle. Upgrade before real customers.
+    buildCommand: npm ci --omit=dev
+    startCommand: npm run migrate && npm start
+    healthCheckPath: /healthz
+    envVars:
+      - { key: NODE_VERSION, value: "22" }
+      - { key: NODE_ENV, value: production }
+      - { key: TRUST_PROXY, value: "true" }
+      - { key: DEMO_MODE, value: "true" }        # fake payments allowed. REMOVE once Razorpay keys are set
+      - { key: DATABASE_URL, sync: false }          # Neon POOLED url, user modulo_app
+      - { key: MIGRATE_DATABASE_URL, sync: false }  # Neon DIRECT url, owner user
+      - { key: APP_DB_PASSWORD, sync: false }       # password you choose for modulo_app (16+ chars)
+      - { key: CORS_ORIGINS, sync: false }          # e.g. https://modulo-demo.vercel.app

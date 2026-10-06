@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark">
+<title>Modulo — demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbfbf5;--sf:#fff;--ink:#000;--mu:#52525b;--ln:#e4e4e7;--al:#c1fbd4;--bt:#000;--bi:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#000;--sf:#0a0a0a;--ink:#fff;--mu:#a1a1aa;--ln:#1e2c31;--bt:#fff;--bi:#000}}
+:root[data-theme=dark]{--bg:#000;--sf:#0a0a0a;--ink:#fff;--mu:#a1a1aa;--ln:#1e2c31;--bt:#fff;--bi:#000}
+*,*::before,*::after{box-sizing:inherit}html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:420 15px/1.5 Inter,Helvetica,Arial,sans-serif}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
+.w{max-width:1100px;margin:0 auto;padding:0 20px}
+h1,h2{font-weight:300;letter-spacing:-.025em;margin:0;text-wrap:balance}h1{font-size:clamp(2.4rem,7vw,4.6rem);line-height:1}h2{font-size:clamp(1.6rem,3.5vw,2.4rem)}
+.mu{color:var(--mu)}.eb{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);font-weight:500}
+button,input,select{font:inherit;color:inherit}
+.b{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 22px;border-radius:9999px;border:1px solid var(--bt);background:var(--bt);color:var(--bi);font-weight:500;cursor:pointer;text-decoration:none;touch-action:manipulation}
+.b.g{background:transparent;color:var(--ink)}.b.s{min-height:34px;padding:4px 14px;font-size:13px}.b:disabled{opacity:.4;cursor:not-allowed}
+header{border-bottom:1px solid var(--ln);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:env(safe-area-inset-top,0px)}
+nav{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}.logo{font-weight:600;font-size:19px;letter-spacing:-.03em}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.mod{text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-height:110px;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:16px}
+.mod[aria-pressed=true]{background:var(--al);border-color:var(--al);color:#000}.mod small{color:var(--mu);flex:1}.mod[aria-pressed=true] small{color:#27272a}
+.lay{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}@media(max-width:860px){.lay{grid-template-columns:1fr}}
+input,select{width:100%;min-height:42px;padding:8px 12px;border:1px solid var(--ln);border-radius:8px;background:var(--sf)}
+label{display:block;font-size:13px;font-weight:500;margin:12px 0 4px}
+.tabs{display:flex;gap:6px;margin:20px 0;flex-wrap:wrap}.tab{padding:8px 18px;border-radius:9999px;border:1px solid var(--ln);background:var(--sf);cursor:pointer}.tab[aria-selected=true]{background:var(--bt);color:var(--bi);border-color:var(--bt)}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);padding:8px}td{padding:10px 8px;border-top:1px solid var(--ln);vertical-align:middle}.r{text-align:right}.sc{overflow-x:auto}
+.pill{display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--ln);font-size:12px;font-weight:500}.pill.ok{background:var(--al);color:#000}.pill.bad{background:#fecaca;color:#000}
+.tot{font-size:2.6rem;font-weight:300;letter-spacing:-.03em}.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:3px 0}.ds{color:#15803d}
+.f{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}@media(max-width:700px){.f{grid-template-columns:1fr 1fr}}
+.ban{background:var(--al);color:#000;text-align:center;font-size:13px;padding:6px 12px}
+dialog{border:1px solid var(--ln);border-radius:12px;background:var(--sf);color:var(--ink);max-width:640px;width:92vw;padding:28px}dialog::backdrop{background:#0008}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--bt);color:var(--bi);padding:12px 20px;border-radius:9999px;opacity:0;transition:.3s;pointer-events:none;z-index:50;max-width:92vw}.toast.on{opacity:1}
+@media print{body>*:not(dialog){display:none}dialog{border:0;position:static;width:100%;max-width:none}.np{display:none}}
+</style></head><body>
+<div class="ban" id="ban"></div>
+<header><div class="w"><nav><span class="logo">modulo</span><span id="nr"></span></nav></div></header>
+<main class="w" id="app" style="padding-bottom:80px"></main>
+<dialog id="dlg"></dialog><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>window.MODULO_API="https://CHANGE-ME.onrender.com"; /* your API URL, no trailing slash */</script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const API=new URLSearchParams(location.search).get("api")||window.MODULO_API||null;let token=null,tab="quote",sel=new Set(["quote","bill"]),seats=5,bill="monthly";
+const MODS=[["quote","Quotation System","Branded quotes, versions, one-click convert to invoice.",105600],["bill","Billing & Invoicing","Invoices, payments, gapless numbering.",158400],["assets","Asset Management","Equipment, assignments, history.",132000],["dept","Department Management","Teams, budgets, approvals.",105600]];
+const SEAT=52800,half=(n,d)=>Math.floor((2*n+d)/(2*d)),inr=n=>"₹"+new Intl.NumberFormat("en-IN",{minimumFractionDigits:2}).format(n/100);
+function price(ids,s,b){const L=[],m=ids.reduce((a,i)=>a+MODS.find(x=>x[0]==i)[3],0),st=s*SEAT,bd=ids.length>=3?500:0,sd=s>=100?2000:s>=25?1000:0;L.push(["Core CRM","Included"],[`${s} user(s)`,st]);ids.forEach(i=>L.push([MODS.find(x=>x[0]==i)[1],MODS.find(x=>x[0]==i)[3]]));let t=m+st;
+if(bd){const d=half(m*bd,1e4);t-=d;L.push([`Bundle discount (${bd/100}%)`,-d])}if(sd){const d=half(st*sd,1e4);t-=d;L.push([`Volume discount (${sd/100}%)`,-d])}if(b=="annual"){const d=half(t*2e3,1e4);t-=d;L.push(["Annual billing (20%)",-d])}return{lines:L,monthlyTotal:t,periodTotal:b=="annual"?t*12:t}}
+/* ---- in-browser mock of the real API (same paths and shapes). Real server: open this file with ?api=https://your-api ---- */
+const D={t:null,co:[],q:[],i:[],n:{q:0,i:0},sub:null,id:0},nid=()=>"id"+ ++D.id,E=(s,c,m)=>({status:s,body:{error:c,message:m||c}}),O=b=>({status:200,body:b});
+const tot=its=>{let s=0,x=0;const l=its.map(i=>{const n=half(Math.round(i.qty*1e3)*i.unitMinor,1e3),t=half(n*i.taxBps,1e4);s+=n;x+=t;return{...i,netMinor:n,taxMinor:t}});return{items:l,subtotalMinor:s,taxMinor:x,totalMinor:s+x}};
+const gate=id=>D.sub&&D.sub.mods.includes(id)?null:E(403,"MODULE_NOT_ENABLED",`module '${id}' is not in your subscription`);
+const inv=i=>({...i,paidMinor:i.paid,balanceMinor:i.totalMinor-i.paid});
+function mock(m,p,b){let r;const K=`${m} ${p.replace(/[0-9a-z]+$/,x=>/^id\d+$/.test(x)?":id":x)}`;
+ if(K=="POST /auth/signup"){D.t={name:b.companyName,status:"trial"};D.co=[{id:nid(),name:"Acme Ltd"},{id:nid(),name:"Patel & Sons"}];return{status:201,body:{token:"demo"}}}
+ if(K=="POST /pricing/quote")return O(price(b.moduleIds,b.seats,b.billing));
+ if(!D.t)return E(401,"UNAUTHENTICATED");
+ if(K=="PUT /subscription"){const q=price(b.moduleIds,b.seats,b.billing);if(D.sub&&D.sub.paid){D.sub.pending={mods:b.moduleIds,seats:b.seats};return O({quote:q,scheduled:true})}D.sub={mods:[...b.moduleIds],seats:b.seats,billing:b.billing,paid:false,pending:null};return O({quote:q})}
+ if(K=="GET /subscription")return O({status:D.t.status,trialDaysLeft:D.t.status=="trial"?14:null,modules:D.sub?.mods||[],subscription:D.sub&&{seats:D.sub.seats,billing:D.sub.billing,pending:D.sub.pending}});
+ if(K=="POST /billing/checkout"){if(!D.sub)return E(409,"NO_SUBSCRIPTION");return O({amountMinor:price(D.sub.mods,D.sub.seats,D.sub.billing).periodTotal})}
+ if(K=="POST /dev/billing/simulate"){D.t.status="active";D.sub.paid=true;if(b.nextCycle&&D.sub.pending){D.sub.mods=D.sub.pending.mods;D.sub.seats=D.sub.pending.seats;D.sub.pending=null}return O({ok:true})}
+ if(K=="GET /companies")return O({items:D.co});
+ if(p.startsWith("/quotes")){if(r=gate("quote"))return r;
+  if(K=="GET /quotes")return O({items:D.q});
+  if(K=="POST /quotes"){const q={id:nid(),number:`QUO-${String(++D.n.q).padStart(4,"0")}`,status:"draft",companyId:b.companyId,validUntil:null,...tot(b.items)};D.q.unshift(q);return{status:201,body:q}}
+  const q=D.q.find(x=>p.includes(x.id)),a=p.split("/")[3];if(!q)return E(404,"NOT_FOUND");
+  const mv=(f,t,c)=>q.status==f?(q.status=t,O(q)):E(409,"INVALID_STATE",c);
+  if(a=="send")return mv("draft","sent","only drafts can be sent");if(a=="accept")return mv("sent","accepted","only sent quotes can be accepted");if(a=="reject")return mv("sent","rejected","only sent quotes can be rejected");
+  if(a=="convert"){if(r=gate("bill"))return r;if(q.status!="accepted")return E(409,"INVALID_STATE","only accepted quotes can be converted");const i={...tot(q.items),id:nid(),number:null,status:"draft",quoteId:q.id,companyId:q.companyId,paid:0,dueDate:"in 14 days"};D.i.unshift(i);q.status="converted";return{status:201,body:inv(i)}}}
+ if(p.startsWith("/invoices")){if(r=gate("bill"))return r;if(K=="GET /invoices")return O({items:D.i.map(inv)});
+  const i=D.i.find(x=>p.includes(x.id)),a=p.split("/")[3];if(!i)return E(404,"NOT_FOUND");
+  if(a=="send"){if(i.status!="draft")return E(409,"INVALID_STATE","only drafts can be sent");i.status="sent";i.number=`INV-${String(++D.n.i).padStart(4,"0")}`;return O(inv(i))}
+  if(a=="payments"){if(!["sent","partial"].includes(i.status))return E(409,"INVALID_STATE","payments need a sent invoice");if(b.amountMinor>i.totalMinor-i.paid)return E(422,"OVERPAYMENT","amount exceeds balance");i.paid+=b.amountMinor;i.status=i.paid>=i.totalMinor?"paid":"partial";return{status:201,body:{invoice:inv(i)}}}}
+ return E(404,"NOT_FOUND",K)}
+async function api(m,p,b){let s,j;if(API){const r=await fetch(API+p,{method:m,headers:{"content-type":"application/json",...(token?{authorization:"Bearer "+token}:{})},body:b?JSON.stringify(b):undefined});s=r.status;j=await r.json().catch(()=>({}))}else{const r=mock(m,p,b);s=r.status;j=JSON.parse(JSON.stringify(r.body))}
+ if(s>=400)throw new Error(j.message||j.error||"error "+s);return j}
+const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),3000)},T=(f)=>async(...a)=>{try{await f(...a)}catch(e){toast(e.message)}};
+$("#ban").textContent=API?"Connected to "+API:"Demo mode: runs in your browser with the same rules as the real server. Data is not saved.";
+/* ---- landing ---- */
+async function landing(){$("#nr").innerHTML="";$("#app").innerHTML=`<div style="padding:70px 0 40px"><p class="eb">Modular business software</p><h1 style="margin:16px 0 20px">One CRM.<br>Only what you use.</h1><p class="mu" style="max-width:52ch;font-size:17px">Pick modules, set your team size, watch the price. Then try the real flow: quote, invoice, payment.</p></div>
+<div class="lay"><div><div class="grid" id="mg">${MODS.map(m=>`<button class="mod" data-m="${m[0]}" aria-pressed="${sel.has(m[0])}"><strong>${m[1]}</strong><small>${m[2]}</small><span>${inr(m[3])}/mo</span></button>`).join("")}</div><p class="mu">12 more modules coming soon (inventory, HR, helpdesk and more).</p></div>
+<aside class="card"><h2 style="font-size:1.4rem">Your plan</h2><label>Team size: <b id="so">${seats}</b></label><input type="range" id="sr" min="1" max="300" value="${seats}"><label>Billing</label><select id="bs"><option value="monthly">Monthly</option><option value="annual"${bill=="annual"?" selected":""}>Annual (save 20%)</option></select><div id="ln" style="margin:14px 0;border-block:1px solid var(--ln);padding:10px 0"></div><div class="tot" id="tt"></div><span class="mu">per month</span>
+<h3 style="font-weight:500;margin:20px 0 0">Start 14-day free trial</h3><form id="su"><label for="cn">Company</label><input id="cn" required value="My Company"><label for="em">Email</label><input id="em" type="email" required value="me@example.com"><label for="pw">Password</label><input id="pw" type="password" required minlength="10" value="demo-password-1"><button class="b" style="width:100%;margin-top:16px">Create account</button></form></aside></div>`;
+ const up=T(async()=>{const q=await api("POST","/pricing/quote",{moduleIds:[...sel],seats,billing:bill,currency:"INR"});$("#ln").innerHTML=q.lines.map(l=>`<div class="row"><span>${esc(l[0])}</span><span class="${l[1]<0?"ds":""}">${typeof l[1]=="number"?(l[1]<0?"−":"")+inr(Math.abs(l[1])):l[1]}</span></div>`).join("");$("#tt").textContent=inr(q.monthlyTotal)});up();
+ $("#mg").onclick=e=>{const b=e.target.closest(".mod");if(!b)return;const i=b.dataset.m;sel.has(i)?sel.delete(i):sel.add(i);b.setAttribute("aria-pressed",sel.has(i));up()};$("#sr").oninput=e=>{seats=+e.target.value;$("#so").textContent=seats;up()};$("#bs").onchange=e=>{bill=e.target.value;up()};
+ $("#su").onsubmit=T(async e=>{e.preventDefault();const r=await api("POST","/auth/signup",{companyName:$("#cn").value,name:"Owner",email:$("#em").value,password:$("#pw").value,currency:"INR"});token=r.token;window.CN=$("#cn").value;await api("PUT","/subscription",{moduleIds:[...sel],seats,billing:bill});const c=await api("GET","/companies");if(!c.items.length)for(const n of["Acme Ltd","Patel & Sons"])await api("POST","/companies",{name:n});app()})}
+/* ---- app ---- */
+async function app(){const s=await api("GET","/subscription");const st=s.status,mods=s.modules;
+ $("#nr").innerHTML=`<span class="pill ${st=="active"?"ok":st=="trial"?"":"bad"}">${st=="trial"?`Trial · ${s.trialDaysLeft} days left`:st}</span>`;
+ $("#app").innerHTML=`<div style="padding:28px 0 0"><p class="eb">Workspace</p><h2>${esc(window.CN||D.t?.name||"Your company")}</h2></div><div class="tabs" role="tablist">${[["quote","Quotes"],["bill","Invoices"],["plan","Plan & billing"]].map(t=>`<button class="tab" role="tab" aria-selected="${tab==t[0]}" data-t="${t[0]}">${t[1]}</button>`).join("")}</div><div id="pane"></div>`;
+ $(".tabs").onclick=e=>{const b=e.target.closest(".tab");if(b){tab=b.dataset.t;app()}};
+ const lock=n=>`<div class="card"><h3 style="font-weight:500;margin:0 0 6px">${n} is not in your plan</h3><p class="mu">This is how module gating works: the server refuses it until you add the module.</p><button class="b" onclick="tab='plan';app()">Add it in Plan</button></div>`;
+ if(tab=="quote")mods.includes("quote")?await quotes(mods):$("#pane").innerHTML=lock("Quotation System");else if(tab=="bill")mods.includes("bill")?await invoices():$("#pane").innerHTML=lock("Billing & Invoicing");else await plan(s)}
+const pill=s=>`<span class="pill ${["paid","accepted","converted"].includes(s)?"ok":["rejected","void"].includes(s)?"bad":""}">${s}</span>`;
+async function quotes(mods){const[c,q]=await Promise.all([api("GET","/companies"),api("GET","/quotes")]);const cn=id=>c.items.find(x=>x.id==id)?.name||"";
+ $("#pane").innerHTML=`<form class="card f" id="qf"><div><label>Customer</label><select id="qc">${c.items.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select></div><div style="grid-column:span 1"><label>Description</label><input id="qd" required value="Website build"></div><div><label>Qty</label><input id="qq" type="number" min="0.001" step="any" value="1"></div><div><label>Unit price ₹</label><input id="qp" type="number" min="0" step="0.01" value="25000"></div><div><label>Tax</label><select id="qt"><option value="1800">18%</option><option value="0">0%</option></select></div><button class="b" style="grid-column:1/-1">Create draft quote</button></form>
+ <div class="card sc" style="margin-top:16px;padding:8px"><table><tr><th>Number</th><th>Customer</th><th class="r">Total</th><th>Status</th><th></th></tr>${q.items.map(x=>`<tr><td>${esc(x.number)}</td><td>${esc(cn(x.companyId))}</td><td class="r">${inr(x.totalMinor)}</td><td>${pill(x.status)}</td><td class="r">${{draft:"send",sent:"accept",accepted:"convert"}[x.status]?`<button class="b s" data-q="${x.id}" data-a="${{draft:"send",sent:"accept",accepted:"convert"}[x.status]}">${{draft:"Send",sent:"Accept",accepted:"Convert to invoice"}[x.status]}</button>`:""}${x.status=="sent"?` <button class="b s g" data-q="${x.id}" data-a="reject">Reject</button>`:""} <button class="b s g" data-v="${x.id}">View</button></td></tr>`).join("")||`<tr><td colspan="5" class="mu">No quotes yet. Create one above.</td></tr>`}</table></div>`;
+ $("#qf").onsubmit=T(async e=>{e.preventDefault();await api("POST","/quotes",{companyId:$("#qc").value,items:[{description:$("#qd").value,qty:+$("#qq").value,unitMinor:Math.round($("#qp").value*100),taxBps:+$("#qt").value}]});toast("Draft created");app()});
+ $("#pane").onclick=T(async e=>{const b=e.target.closest("[data-a]"),v=e.target.closest("[data-v]");if(v)return doc(q.items.find(x=>x.id==v.dataset.v),cn);if(!b)return;const r=await api("POST",`/quotes/${b.dataset.q}/${b.dataset.a}`,{});if(b.dataset.a=="convert"){tab="bill";toast("Invoice draft created")}app()})}
+async function invoices(){const[c,i]=await Promise.all([api("GET","/companies"),api("GET","/invoices")]);const cn=id=>c.items.find(x=>x.id==id)?.name||"";
+ $("#pane").innerHTML=`<div class="card sc" style="padding:8px"><table><tr><th>Number</th><th>Customer</th><th class="r">Total</th><th class="r">Balance</th><th>Status</th><th></th></tr>${i.items.map(x=>`<tr><td>${esc(x.number||"Draft")}</td><td>${esc(cn(x.companyId))}</td><td class="r">${inr(x.totalMinor)}</td><td class="r">${inr(x.balanceMinor)}</td><td>${pill(x.status)}</td><td class="r">${x.status=="draft"?`<button class="b s" data-i="${x.id}" data-a="send">Send (gets number)</button>`:["sent","partial"].includes(x.status)?`<button class="b s" data-i="${x.id}" data-a="pay" data-b="${x.balanceMinor}">Record payment ${inr(x.balanceMinor)}</button>`:""} <button class="b s g" data-v="${x.id}">View</button></td></tr>`).join("")||`<tr><td colspan="6" class="mu">No invoices. Convert an accepted quote to make one.</td></tr>`}</table></div>`;
+ $("#pane").onclick=T(async e=>{const b=e.target.closest("[data-a]"),v=e.target.closest("[data-v]");if(v)return doc(i.items.find(x=>x.id==v.dataset.v),cn);if(!b)return;if(b.dataset.a=="send")await api("POST",`/invoices/${b.dataset.i}/send`,{});else await api("POST",`/invoices/${b.dataset.i}/payments`,{amountMinor:+b.dataset.b,method:"bank"});app()})}
+async function plan(s){const sb=s.subscription,cur=new Set(s.modules);if(!window.ps)window.ps={m:new Set(cur),s:sb?.seats||5};const P=window.ps,q=await api("POST","/pricing/quote",{moduleIds:[...P.m],seats:P.s,billing:sb?.billing||"monthly",currency:"INR"});
+ $("#pane").innerHTML=`<div class="lay"><div><div class="grid">${MODS.map(m=>`<button class="mod" data-m="${m[0]}" aria-pressed="${P.m.has(m[0])}"><strong>${m[1]}</strong><small>${m[2]}</small><span>${inr(m[3])}/mo</span></button>`).join("")}</div><label>Team size: <b id="so">${P.s}</b></label><input type="range" id="sr" min="1" max="300" value="${P.s}"></div>
+ <aside class="card"><h3 style="font-weight:500;margin:0 0 8px">${s.status=="trial"?"Trial: changes apply instantly":"Paid: changes start next renewal"}</h3>${q.lines.map(l=>`<div class="row"><span>${esc(l[0])}</span><span>${typeof l[1]=="number"?(l[1]<0?"−":"")+inr(Math.abs(l[1])):l[1]}</span></div>`).join("")}<div class="tot">${inr(q.monthlyTotal)}</div><span class="mu">per month</span>${sb?.pending?`<p class="pill">Scheduled: ${sb.pending.mods?.length??sb.pending.moduleIds?.length} modules, ${sb.pending.seats} users from next renewal</p>`:""}
+ <button class="b" id="sv" style="width:100%;margin-top:14px">Save changes</button>${s.status=="trial"||s.status=="suspended"||s.status=="cancelled"?`<button class="b g" id="pay" style="width:100%;margin-top:8px">Pay now (fake payment)</button>`:`<button class="b g" id="rn" style="width:100%;margin-top:8px">Simulate next renewal</button>`}</aside></div>`;
+ document.querySelector(".grid").onclick=e=>{const b=e.target.closest(".mod");if(!b)return;const i=b.dataset.m;P.m.has(i)?P.m.delete(i):P.m.add(i);plan(s)};$("#sr").onchange=e=>{P.s=+e.target.value;plan(s)};
+ $("#sv").onclick=T(async()=>{const r=await api("PUT","/subscription",{moduleIds:[...P.m],seats:P.s,billing:sb?.billing||"monthly"});window.ps=null;toast(r.scheduled?"Scheduled for next renewal":"Saved");app()});
+ const pay=$("#pay");if(pay)pay.onclick=T(async()=>{await api("POST","/billing/checkout",{});await api("POST","/dev/billing/simulate",{type:"charged"});toast("Payment received (fake). Account active.");app()});
+ const rn=$("#rn");if(rn)rn.onclick=T(async()=>{await api("POST","/dev/billing/simulate",{type:"charged",nextCycle:true});window.ps=null;toast("Renewal charged. Scheduled changes applied.");app()})}
+function doc(x,cn){const d=$("#dlg");d.innerHTML=`<p class="eb">${x.quoteId!==undefined||x.dueDate?"Invoice":"Quotation"}</p><h2>${esc(x.number||"Draft")}</h2><p class="mu">${esc(cn(x.companyId))} · ${pill(x.status)}</p><table>${(x.items||[]).map(i=>`<tr><td>${esc(i.description)}</td><td class="r">${i.qty} × ${inr(i.unitMinor)}</td><td class="r">${inr(i.netMinor)}</td></tr>`).join("")}</table><div class="row" style="margin-top:12px"><span>Subtotal</span><span>${inr(x.subtotalMinor)}</span></div><div class="row"><span>Tax</span><span>${inr(x.taxMinor)}</span></div><div class="row"><b>Total</b><b>${inr(x.totalMinor)}</b></div>${x.balanceMinor!==undefined?`<div class="row"><b>Balance due</b><b>${inr(x.balanceMinor)}</b></div>`:""}<p class="np" style="margin-top:20px"><button class="b" onclick="print()">Print / Save PDF</button> <button class="b g" onclick="dlg.close()">Close</button></p>`;d.showModal()}
+landing();
+</script></body></html>
