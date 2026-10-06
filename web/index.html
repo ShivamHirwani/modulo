@@ -39,7 +39,7 @@ dialog{border:1px solid var(--ln);border-radius:12px;background:var(--sf);color:
 <header><div class="w"><nav><span class="logo">modulo</span><span id="nr"></span></nav></div></header>
 <main class="w" id="app" style="padding-bottom:80px"></main>
 <dialog id="dlg"></dialog><div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script>window.MODULO_API="https://CHANGE-ME.onrender.com"; /* your API URL, no trailing slash */</script>
+<script>window.MODULO_API="https://modulo-api-88xs.onrender.com"; /* your API URL, no trailing slash */</script>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const API=new URLSearchParams(location.search).get("api")||window.MODULO_API||null;let token=null,tab="quote",sel=new Set(["quote","bill"]),seats=5,bill="monthly";
